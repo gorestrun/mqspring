@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+    <property name="LOG-DIRECTORY" value="./logs" />
+ 	<property name="LOG-FILE-BASENAME" value="mqspring" />
+ 	<property name="MAX_FILE_SIZE" value="100MB" />
+ 	
+    <appender name="Console" class="ch.qos.logback.core.ConsoleAppender">
+        <layout class="ch.qos.logback.classic.PatternLayout">
+            <Pattern>%d [%thread] %-5level %logger{40} - %msg%n</Pattern>
+        </layout>
+    </appender>
+ 
+    <appender name="RollingFile" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>${LOG-DIRECTORY}/${LOG-FILE-BASENAME}.log</file>
+        <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
+            <Pattern>%d [%t] %-5level %logger{40}.%M[%L] - %m%n</Pattern>
+        </encoder>
+ 
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <fileNamePattern>${LOG-DIRECTORY}/${LOG-FILE-BASENAME}-%d{yyyy-MM-dd}.%i.log</fileNamePattern>
+            <maxHistory>100</maxHistory>
+            <timeBasedFileNamingAndTriggeringPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
+                <maxFileSize>${MAX_FILE_SIZE}</maxFileSize>
+            </timeBasedFileNamingAndTriggeringPolicy>
+        </rollingPolicy>
+    </appender>
+
+    <appender name="ErrorRollingFile" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>${LOG-DIRECTORY}/error-${LOG-FILE-BASENAME}.log</file>
+        <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
+            <level>ERROR</level>
+        </filter>
+        <encoder class="ch.qos.logback.classic.encoder.PatternLayoutEncoder">
+            <Pattern>%d %p %C{1.}.%M[%L] [%t] %m%n</Pattern>
+        </encoder>
+ 
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <fileNamePattern>${LOG-DIRECTORY}/error-${LOG-FILE-BASENAME}-%d{yyyy-MM-dd}.%i.log</fileNamePattern>
+            <maxHistory>100</maxHistory>
+            <timeBasedFileNamingAndTriggeringPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedFNATP">
+                <maxFileSize>${MAX_FILE_SIZE}</maxFileSize>
+            </timeBasedFileNamingAndTriggeringPolicy>
+        </rollingPolicy>
+    </appender>
+
+    <root level="INFO">
+        <appender-ref ref="Console" />
+        <appender-ref ref="RollingFile" />
+        <appender-ref ref="ErrorRollingFile" />
+    </root>
+</configuration>
